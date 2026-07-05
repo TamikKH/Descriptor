@@ -1,31 +1,31 @@
-def cipher(file_name, number_of_bias, all_arr):
-    cipher_arr = all_arr
-    bias_arr = cipher_arr.copy()
-    bias_arr = bias_arr[number_of_bias:] + bias_arr[:number_of_bias]
+def cipher(file_name, number_of_shift, all_arr):
+    arr_shift = array_shift(number_of_shift, all_arr)
     with open(file_name, "r+") as file:
         data = list(file.read())
         for i in range(len(data)):
-            if data[i] in cipher_arr:
-                index = cipher_arr.index(data[i])
-                data[i] = bias_arr[index]
+            if data[i] in all_arr:
+                index = arr_shift.index(data[i])
+                data[i] = all_arr[index]
         file.seek(0)
         file.write("".join(data))
-    print("Шифровка выполнена успешно")
+        print("Шифровка выполнена успешно")
 
 
-def decipher(file_name, number_of_bias, all_arr):
-    decipher_arr = all_arr
-    bias_arr = decipher_arr.copy()
-    bias_arr = bias_arr[number_of_bias:] + bias_arr[:number_of_bias]
+def decipher(file_name, number_of_shift, all_arr):
+    arr_shift = array_shift(number_of_shift, all_arr)
     with open(file_name, "r+") as file:
         data = list(file.read())
         for i in range(len(data)):
-            if data[i] in decipher_arr:
-                index = bias_arr.index(data[i])
-                data[i] = decipher_arr[index]
+            if data[i] in all_arr:
+                index = arr_shift.index(data[i])
+                data[i] = all_arr[index]
         file.seek(0)
         file.write("".join(data))
-    print("Дешифровка выполнена успешно")
+        print("Дешифровка выполнена успешно")
+
+def array_shift(number_of_shift, all_arr):
+    number_of_shift %= len(all_arr)
+    return all_arr[number_of_shift:] + all_arr[:number_of_shift]
 
 
 def language_definition(file_name, rus_alf, eng_alf):
@@ -66,14 +66,14 @@ def main():
         print('Для зашифровки файла введите шифровать или введите единицу')
         print('Для дешифровки файла введите дефровать или введите двойку')
         type_of_operation = input()
-        number_of_bias = int(input('Введите число для шифровки/дешифровки: '))
+        number_of_shift = int(input('Введите число для шифровки/дешифровки: '))
         match type_of_operation:
             case 'шифровать' | '1':
                 all_arr = language_definition(file_name, rus_alf, eng_alf)
-                cipher(file_name, number_of_bias, all_arr)
+                cipher(file_name, number_of_shift, all_arr)
             case 'дефровать' | '2':
                 all_arr = language_definition(file_name, rus_alf, eng_alf)
-                decipher(file_name, number_of_bias, all_arr)
+                decipher(file_name, number_of_shift, all_arr)
             case _:
                 print("Нераспознанная команда")
     except FileNotFoundError:
